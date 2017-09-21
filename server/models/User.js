@@ -14,10 +14,14 @@ var UserSchema = new mongoose.Schema({
   }
 });
 
-UserSchema.methods.verifyPassword = function(password, next) {
-  bcrypt.compare(password, this.password, function(error, res) {
-    next(error, res);
-  });
+UserSchema.statics.verify = function(username, password, next) {
+  User.findOne({
+    username: username
+  }, function(error, user) {
+    bcrypt.compare(password, user.password, function(error, res) {
+      next(error, res);
+    });
+  })
 };
 
 UserSchema.pre('save', function(next) {
