@@ -16,6 +16,10 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true
+  },
+  scope: {
+    type: String,
+    default: "user"
   }
 });
 

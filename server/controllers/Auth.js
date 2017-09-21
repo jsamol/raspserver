@@ -11,7 +11,7 @@ passport.use(new bearer.Strategy(function(token, next) {
     if (!user) {
       return next(null, false);
     }
-    return next(null, user);
+    return next(null, user, { scope: user.scope });
   });
 }));
 
