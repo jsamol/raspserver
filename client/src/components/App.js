@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 
 import Home from './root/Home';
-import Login from './auth/Login';
+import Login from '../containers/auth/Login';
 
 import './App.css';
 
-function PrivateRoute({ component: Component, ...rest}) {
+function PrivateRoute({ component: Component, isAuthorized, ...rest}) {
   return (
-    <Route {...rest} render={props => (
-      <Component {...props}/>
-    )}/>
+    isAuthorized
+    ? <Route {...rest} render={props => (
+        <Component {...props}/>
+      )}/>
+    : <Redirect to="/login"/>
   );
 }
 
@@ -26,11 +28,15 @@ class App extends Component {
       <BrowserRouter>
         <Switch>
           <Route exact path="/login" component={Login}/>
-          <PrivateRoute exact path="/" component={Home}/>
+          <PrivateRoute exact path="/" component={Home} isAuthorized={this.props.isAuthorized}/>
         </Switch>
       </BrowserRouter>
     );
   }
 }
+
+App.propTypes = {
+  isAuthorized: PropTypes.bool.isRequired
+};
 
 export default App;
