@@ -2,12 +2,26 @@ var express = require('express');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var index = require('./routes/index');
 var auth = require('./routes/auth');
 var users = require('./routes/users');
 
+var db_config = require('./config/db_config');
+
 var app = express();
+
+mongoose.Promise = global.Promise;
+
+mongoose.connect(`mongodb://${db_config.host}:${db_config.port}/${db_config.db}`, {
+  useMongoClient: true
+});
+
+mongoose.connection.on('error', function(error) {
+  console.error(error);
+  process.exit(1);
+});
 
 app.use(logger('dev'));
 app.use(bodyParser.json());

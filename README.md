@@ -19,6 +19,7 @@ The application has been developed and tested with:
 - ```Ubuntu MATE 16.04.2```
 - ```Node.js 6.11.3```
 - ```npm 5.4.2```
+- ```MongoDB 3.4.9```
 
 ### How to run
 ```$ git clone https://github.com/jsamol/raspserver.git```
