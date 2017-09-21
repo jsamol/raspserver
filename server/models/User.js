@@ -23,13 +23,18 @@ UserSchema.statics.verify = function(username, password, next) {
   User.findOne({
     username: username
   }, function(error, user) {
-    bcrypt.compare(password, user.password, function(error, res) {
-      var token = null;
-      if (res) {
-        token = `Bearer ${user.token}`;
-      }
-      next(error, res, token);
-    });
+    if (error) {
+      return next(error);
+    }
+    if (user) {
+      bcrypt.compare(password, user.password, function (error, res) {
+        var token = null;
+        if (res) {
+          token = `Bearer ${user.token}`;
+        }
+        next(error, res, token);
+      });
+    }
   })
 };
 
