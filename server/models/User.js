@@ -11,6 +11,11 @@ var UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  token: {
+    type: String,
+    required: true,
+    unique: true
   }
 });
 
@@ -19,7 +24,11 @@ UserSchema.statics.verify = function(username, password, next) {
     username: username
   }, function(error, user) {
     bcrypt.compare(password, user.password, function(error, res) {
-      next(error, res);
+      var token = null;
+      if (res) {
+        token = `Bearer ${user.token}`;
+      }
+      next(error, res, token);
     });
   })
 };
