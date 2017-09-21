@@ -9,11 +9,11 @@ router.post("/", function(req, res, next) {
       return next(error);
     }
     if (!match) {
-      var unauthorized = new Error("Invalid username or password");
-      unauthorized.status = 401;
-      return next(unauthorized);
+      var invalid = new Error("Invalid username or password");
+      invalid.status = 401;
+      return next(invalid);
     }
-    res.json({
+    res.send({
       token: token
     });
   });
