@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var User = require('../database/models/User');
+var User = require('../models/User');
 
 router.post("/", function(req, res, next) {
   User.verify(req.body.username, req.body.password, function(error, match){
