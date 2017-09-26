@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Form, FormControl, FormGroup, Glyphicon, InputGroup } from 'react-bootstrap';
+import { Alert, Button, Form, FormControl, FormGroup, Glyphicon, InputGroup } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 
 import './Login.css';
@@ -28,7 +28,13 @@ class Login extends Component {
       this.props.toggleAuthorization();
       this.props.addToken(res.data.token);
     }).catch(error => {
-      console.error(error);
+      console.log(error.response);
+      this.setState({
+        error: {
+          message: error.response.data,
+          status: error.response.status
+        }
+      });
     });
   }
 
@@ -49,8 +55,13 @@ class Login extends Component {
         ? <Redirect to="/"/>
         : <div id="content">
             <Glyphicon id="cloud" glyph="cloud"/>
+            { this.state.error &&
+            <Alert className="center width__300px" bsStyle="danger">
+              <h4>Error { this.state.error.status }!</h4>
+              <p>{ this.state.error.message }</p>
+            </Alert> }
             <Form className="login-form" onSubmit={this.handleLogin}>
-              <FormGroup>
+              <FormGroup className="center width__300px">
                 <InputGroup>
                   <InputGroup.Addon>
                     <Glyphicon glyph="user"/>
@@ -58,7 +69,7 @@ class Login extends Component {
                   <FormControl id="username" type="text" onChange={this.handleInputChange}/>
                 </InputGroup>
               </FormGroup>
-              <FormGroup>
+              <FormGroup className="center width__300px">
                 <InputGroup>
                   <InputGroup.Addon>
                     <Glyphicon glyph="lock"/>

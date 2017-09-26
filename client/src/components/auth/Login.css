@@ -1,6 +1,20 @@
+.center {
+    margin: 8px auto;
+    width: 50%;
+}
+
+.width__300px {
+    width: 300px;
+}
+
 div#content {
-    padding: 300px 800px;
+    padding: 300px 0;
     text-align: center;
+}
+
+.alert {
+    text-align: left;
+    margin-bottom: 30px;
 }
 
 #cloud {
@@ -12,6 +26,7 @@ div#content {
 }
 
 .login-form .btn {
+    display: inline-block;
     margin: 0 5px;
 }
 
