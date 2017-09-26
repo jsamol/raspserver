@@ -1,29 +1,37 @@
 var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
 
 var index = require('./routes/index');
+var auth = require('./routes/auth');
 var users = require('./routes/users');
+
+var db_config = require('./config/db_config');
+var AuthController = require('./controllers/Auth');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+mongoose.Promise = global.Promise;
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+mongoose.connect(`mongodb://${db_config.host}:${db_config.port}/${db_config.db}`, {
+  useMongoClient: true
+});
+
+mongoose.connection.on('error', function(error) {
+  console.error(error);
+  process.exit(1);
+});
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/users', users);
+app.use('/auth', auth);
+app.use('/', AuthController.authenticate, index);
+app.use('/users', AuthController.authenticate, users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -40,7 +48,6 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
 });
 
 module.exports = app;
