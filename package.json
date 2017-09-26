@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "install": "npm install --prefix ./client && npm install --prefix ./server",
+    "setup": "npm install && npm install --prefix ./client && npm install --prefix ./server",
     "start": "concurrently --kill-others \"npm start --prefix ./client\" \"npm start --prefix ./server\""
   },
   "dependencies": {
