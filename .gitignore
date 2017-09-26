@@ -52,3 +52,7 @@ fabric.properties
 
 # Node.js
 node_modules/
+
+# Database
+db/*
+!db/.gitkeep
