@@ -5,6 +5,8 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Home from './root/Home';
 import Login from '../containers/auth/Login';
 
+import { checkToken, getToken } from "../utils/auth/TokenHandler"
+
 import './App.css';
 
 function PrivateRoute({ component: Component, isAuthorized, ...rest}) {
@@ -23,6 +25,13 @@ PrivateRoute.propTypes = {
 };
 
 class App extends Component {
+  componentWillMount() {
+    if (!this.props.isAuthorized && checkToken()) {
+      this.props.toggleAuthorization();
+      this.props.addToken(getToken());
+    }
+  }
+
   render() {
     return (
       <BrowserRouter>
@@ -36,7 +45,9 @@ class App extends Component {
 }
 
 App.propTypes = {
-  isAuthorized: PropTypes.bool.isRequired
+  isAuthorized: PropTypes.bool.isRequired,
+  toggleAuthorization: PropTypes.func.isRequired,
+  addToken: PropTypes.func.isRequired
 };
 
 export default App;
