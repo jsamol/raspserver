@@ -29,7 +29,7 @@ else
             --start)
                 if [ "$(docker images -q raspserver)" != "" ] && [ ! "$(docker ps -a | grep raspserver)" ] && [ ! "$(docker ps -a | grep mongod)" ]
                 then
-                    docker run --name mongod -d mongo && docker run -p 3000:3000 --name raspserver --link mongod:mongo -d raspserver
+                    docker run --name mongod -v "$PARENT_DIR/db":/data/db -d mongo && docker run -p 3000:3000 --name raspserver --link mongod:mongo -d raspserver
                 fi
                 shift
                 ;;
