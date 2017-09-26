@@ -9,7 +9,7 @@ router.post("/", function(req, res, next) {
       return next(error);
     }
     if (!match) {
-      var invalid = new Error("Invalid username or password");
+      var invalid = new Error("Invalid username or password.");
       invalid.status = 401;
       return next(invalid);
     }
