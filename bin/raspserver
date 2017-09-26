@@ -1,0 +1,56 @@
+#!/bin/bash
+POSITIONAL=()
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function help {
+    usage="Usage:\t./raspserver OPTION"
+    info="A client-server application for Raspberry Pi 3 running Ubuntu MATE."
+    options="Options:\n\t-b, --build\tBuild the application\n\t    --start\tStart the application and mongoDB service\n\t    --stop\tStop the application and mongoDB service\n\t-r, --restart\tRestart the application and mongoDB service\n\t-h, --help\tPrint usage"
+    echo -e "\n$usage\n\n$info\n\n$options"
+}
+
+if [[ $# -eq 0 ]]
+then
+    help
+else
+    while [[ $# -gt 0 ]]
+    do
+        key="$1"
+
+        case $key in
+            -b|--build)
+                if [[ "$(docker images -q raspserver)" != "" ]]; then
+                    docker rmi raspserver
+                fi
+                docker build -t raspserver `dirname $DIR`
+                shift
+                ;;
+            --start)
+                if [ "$(docker images -q raspserver)" != "" ] && [ ! "$(docker ps -a | grep raspserver)" ] && [ ! "$(docker ps -a | grep mongod)" ]
+                then
+                    docker run --name mongod -d mongo && docker run -p 3000:3000 --name raspserver --link mongod:mongo -d raspserver
+                fi
+                shift
+                ;;
+            --stop)
+                if [ "$(docker ps -a | grep raspserver)" ] && [ "$(docker ps -a | grep mongod)" ]
+                then
+                    docker stop raspserver && docker stop mongod && docker rm raspserver && docker rm mongod
+                fi
+                shift
+                ;;
+            -r|--restart)
+                if [ "$(docker ps -a | grep raspserver)" ] && [ "$(docker ps -a | grep mongod)" ]
+                then
+                    docker restart mongod && docker restart raspserver
+                fi
+                shift
+                ;;
+            -h|--help|*)
+                help
+                shift
+                ;;
+        esac
+    done
+fi
