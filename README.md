@@ -23,8 +23,9 @@ The application has been developed and tested with:
 - ```MongoDB 3.4.9```
 
 ### How to run
-```$ git clone https://github.com/jsamol/raspserver.git```
-
-```$ cd raspserver```
-
-```$ npm install```
+```
+$ git clone https://github.com/jsamol/raspserver.git
+$ cd raspserver
+$ npm install
+$ npm start
+```
