@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:6.11.3
 
 RUN mkdir -p /usr/src/raspserver
 RUN mkdir -p /usr/src/raspserver/client
