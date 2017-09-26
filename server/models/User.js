@@ -31,7 +31,7 @@ UserSchema.statics.verify = function(username, password, next) {
       return next(error);
     }
     if (user) {
-      bcrypt.compare(password, user.password, function (error, res) {
+      return bcrypt.compare(password, user.password, function (error, res) {
         var token = null;
         if (res) {
           token = `Bearer ${user.token}`;
@@ -39,6 +39,7 @@ UserSchema.statics.verify = function(username, password, next) {
         next(error, res, token);
       });
     }
+    next();
   })
 };
 
