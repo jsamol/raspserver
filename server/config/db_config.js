@@ -1,5 +1,5 @@
 module.exports = {
-  host: "localhost",
+  host: "mongo",
   port: 27017,
   db: "raspserver"
 };
