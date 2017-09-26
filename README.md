@@ -13,19 +13,20 @@ Backend: ```Express.js```
 Frontend: ```React.js```
 
 ### Requirements
-The application has been developed and tested with:
+- [```Docker```](https://www.docker.com/community-edition)
 
-- ```Ubuntu 16.04```
-- ```Elementary OS 0.4.1 Loki```
-- ```Ubuntu MATE 16.04.2```
-- ```Node.js 6.11.3```
-- ```npm 5.4.2```
-- ```MongoDB 3.4.9```
-
-### How to run
+### First run
 ```
 $ git clone https://github.com/jsamol/raspserver.git
-$ cd raspserver
-$ npm install
-$ npm start
+$ cd raspserver/bin
+$ ./raspserver --build
+$ ./raspserver --start
 ```
+The application is running on `localhost:3000`.
+
+### Available commands
+- ```$ ./raspserver -b | --build``` Build the application
+- ```$ ./raspserver --start``` Start the application and mongoDB service
+- ```$ ./raspserver --stop``` Stop the application and mongoDB service
+- ```$ ./raspserver -r | --restart``` Restart the application and mongoDB service
+- ```$ ./raspserver -h | --help``` Print usage
