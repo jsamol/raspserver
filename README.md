@@ -16,6 +16,7 @@ Frontend: ```React.js```
 The application has been developed and tested with:
 
 - ```Ubuntu 16.04```
+- ```Elementary OS 0.4.1 Loki```
 - ```Ubuntu MATE 16.04.2```
 - ```Node.js 6.11.3```
 - ```npm 5.4.2```
