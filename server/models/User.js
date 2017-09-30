@@ -43,6 +43,22 @@ UserSchema.statics.verify = function(username, password, next) {
   })
 };
 
+UserSchema.statics.listAll = function(next) {
+  User.find(function(error, users) {
+    if (error) {
+      return next(error);
+    }
+    var usersToDisplay = users.map(function(user) {
+      return ({
+        username: user.username,
+        scope: user.scope
+      });
+    });
+
+    return next(null, usersToDisplay);
+  });
+};
+
 UserSchema.pre('save', function(next) {
   var user = this;
 
