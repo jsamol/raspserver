@@ -27,6 +27,6 @@ The application is running on `localhost:3000`.
 ### Available commands
 - ```$ ./raspserver -b | --build``` Build the application
 - ```$ ./raspserver --start``` Start the application and mongoDB service
-- ```$ ./raspserver --stop``` Stop the application and mongoDB service
+- ```$ ./raspserver --stop``` Stop the application and mongoDB service and remove the containers
 - ```$ ./raspserver -r | --restart``` Restart the application and mongoDB service
 - ```$ ./raspserver -h | --help``` Print usage
