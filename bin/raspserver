@@ -6,7 +6,7 @@ PARENT_DIR="$( dirname "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" )"
 function help {
     usage="Usage:\t./raspserver OPTION"
     info="A client-server application for Raspberry Pi 3 running Ubuntu MATE."
-    options="Options:\n\t-b, --build\tBuild the application\n\t    --start\tStart the application and mongoDB service\n\t    --stop\tStop the application and mongoDB service\n\t-r, --restart\tRestart the application and mongoDB service\n\t-h, --help\tPrint usage"
+    options="Options:\n\t-b, --build\tBuild the application\n\t    --start\tStart the application and mongoDB service\n\t    --stop\tStop the application and mongoDB service and remove the containers\n\t-r, --restart\tRestart the application and mongoDB service\n\t-h, --help\tPrint usage"
     echo -e "\n$usage\n\n$info\n\n$options"
 }
 
@@ -27,23 +27,47 @@ else
                 shift
                 ;;
             --start)
-                if [ "$(docker images -q raspserver)" != "" ] && [ ! "$(docker ps -a | grep raspserver)" ] && [ ! "$(docker ps -a | grep mongod)" ]
+                if [ "$(docker images -q raspserver)" == "" ]
                 then
+                    echo -e "Error: The raspserver docker image does not exist. You have to build an image first.\nSee './raspserver --help'."
+                elif [ "$(docker ps -a | grep raspserver)" ]
+                then
+                    echo -e "Error: The container name 'raspserver' is already in use. You have to stop the container if running and remove it first.\nSee './raspserver --help'."
+                elif [ "$(docker ps -a | grep mongod)" ]
+                then
+                    echo -e "Error: The container name 'mongod' is already in use. You have to stop the container if running and remove it first.\nSee './raspserver --help'."
+                else
                     docker run --name mongod -v "$PARENT_DIR/db":/data/db -d mongo && docker run -p 3000:3000 --name raspserver --link mongod:mongo -d raspserver
                 fi
                 shift
                 ;;
             --stop)
-                if [ "$(docker ps -a | grep raspserver)" ] && [ "$(docker ps -a | grep mongod)" ]
+                if [ "$(docker ps -a | grep raspserver)" ]
                 then
-                    docker stop raspserver && docker stop mongod && docker rm raspserver && docker rm mongod
+                    docker stop raspserver && docker rm raspserver
+                else
+                    echo -e "Warning: The raspserver container does not exist.\nSee './raspserver --help'."
+                fi
+                if [ "$(docker ps -a | grep mongod)" ]
+                then
+                    docker stop mongod && docker rm mongod
+                else
+                    echo -e "Warning: The mongod container does not exist.\nSee './raspserver --help'."
                 fi
                 shift
                 ;;
             -r|--restart)
-                if [ "$(docker ps -a | grep raspserver)" ] && [ "$(docker ps -a | grep mongod)" ]
+                if [ "$(docker ps -a | grep mongod)" ]
                 then
-                    docker restart mongod && docker restart raspserver
+                    docker restart mongod
+                else
+                    echo -e "Error: The mongod container does not exist. You have to run a container first.\nSee './raspserver --help'."
+                fi
+                if [ "$(docker ps -a | grep raspserver)" ]
+                then
+                    docker restart raspserver
+                else
+                    echo -e "Error: The raspserver container does not exist. You have to run a container first.\nSee './raspserver --help'."
                 fi
                 shift
                 ;;
