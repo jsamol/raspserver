@@ -1,5 +1,8 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
+
+var app_config = require('../config/app_config');
 
 var UserSchema = new mongoose.Schema({
   username: {
@@ -12,14 +15,13 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  token: {
-    type: String,
-    required: true,
-    unique: true
-  },
   scope: {
     type: String,
     default: "user"
+  },
+  created: {
+    type: Date,
+    default: Date.now()
   }
 });
 
@@ -34,7 +36,7 @@ UserSchema.statics.verify = function(username, password, next) {
       return bcrypt.compare(password, user.password, function (error, res) {
         var token = null;
         if (res) {
-          token = `Bearer ${user.token}`;
+          token = `Bearer ${generateToken(user.toObject(), '1h')}`;
         }
         next(error, res, token);
       });
@@ -51,7 +53,8 @@ UserSchema.statics.listAll = function(next) {
     var usersToDisplay = users.map(function(user) {
       return ({
         username: user.username,
-        scope: user.scope
+        scope: user.scope,
+        created: user.created
       });
     });
 
@@ -77,6 +80,12 @@ UserSchema.pre('save', function(next) {
     });
   });
 });
+
+function generateToken(payload, expiresIn) {
+  return jwt.sign(payload, app_config.secret, {
+    expiresIn: expiresIn
+  });
+}
 
 var User = mongoose.model('User', UserSchema);
 
