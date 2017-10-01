@@ -14,6 +14,24 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.post("/", function(req, res, next) {
+  var newUser = new User({
+    username: req.body.username,
+    password: req.body.password,
+  });
 
+  if (req.body.scope) {
+    newUser['scope'] = req.body.scope;
+  }
+
+  newUser.save(function(error, newUser) {
+    if (error) {
+      return next(error);
+    }
+    res.send({
+      createdUser: newUser
+    });
+  });
+});
 
 module.exports = router;
