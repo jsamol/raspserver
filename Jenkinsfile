@@ -1,6 +1,7 @@
 node {
     stage('Preparation') {
         git 'https://github.com/jsamol/raspserver'
+        sh "bin/raspserver --stop"
     }
 
     stage('Build') {
